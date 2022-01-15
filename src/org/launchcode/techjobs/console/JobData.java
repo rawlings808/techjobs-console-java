@@ -7,9 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -73,17 +71,33 @@ public class JobData {
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
 
         for (HashMap<String, String> row : allJobs) {
-
+            //for each row in allJobs
             String aValue = row.get(column);
-
-            if (aValue.contains(value)) {
+            //aValue is the row that contains the column parameter
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
-
         return jobs;
     }
+    public static ArrayList<HashMap<String, String>> findByValue(String value) {
 
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+            boolean matchFound = false;
+            for (Map.Entry<String, String> item : row.entrySet()) {
+                    String itemValue = item.getValue();
+                    if (itemValue.toLowerCase().contains(value.toLowerCase()) && (!matchFound)) {
+                        jobs.add(row);
+                        matchFound = true;
+                    }
+                }
+            }
+        return jobs;
+    }
     /**
      * Read in data from a CSV file and store it in a list
      */
@@ -124,5 +138,19 @@ public class JobData {
             e.printStackTrace();
         }
     }
+//    In the JobData class, create a new (public static) method that will search for a string within each of the columns.
+//    Name it findByValue. Here are a few observations:
+//
+//    1. The method that you write should not contain duplicate jobs.
+//    So, for example, if a listing has position type “Web - Front End” and name “Front end web dev” then searching for “web” should not include the listing twice.
+//
+//    2. As with printJobs, you should write your code in a way that if a new column is added to the data, your code will automatically search the new column as well.
+//    3. You should NOT write code that calls findByColumnAndValue once for each column. Rather, utilize loops and collection methods as you did above.
+//    4. You should, on the other hand, read and understand findByColumnAndValue, since your code will look similar in some ways.
 
+
+//    You’ll need to call findByValue from somewhere in main. We’ll leave it up to you to find where.
+//    You might have noticed that when you try to search all columns using the app, a message is printed,
+//    so that is a good clue to help you find where to place this new method call.
+//    Once you find where to call your new method, you can Run the program again to test your code.
 }
